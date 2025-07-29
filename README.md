@@ -36,3 +36,4 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 "# kadai1" 
 "# kadai2" 
 "# yoshida0005" 
+"# manato0007" 

@@ -24,3 +24,4 @@ npm run lint
 See [Configuration Reference](https://cli.vuejs.org/config/).
 "# manato0503" 
 "# yoshida111" 
+"# yoshida111" 

@@ -1,7 +1,10 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import PurchaseView from '../views/PurchaseView.vue'; // 購入ページの読み込み
+import tomorrowView from '../views/tomorrowView.vue'
+import AtomorrowView from '../views/AtomorrowView.vue'
+
+// 購入ページの読み込み
 
 Vue.use(VueRouter)
 
@@ -12,20 +15,21 @@ const routes = [
     component: HomeView
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    path: '/tomorrowView',
+    name: 'tomorrowView',
+    component: tomorrowView
   },
   
   // 購入ページのルートを追加
   {
-    path: '/purchase',
-    name: 'purchase',
-    component: PurchaseView
-  }
+    path: '/AtomorrowView',
+    name: 'AtomorrowView',
+    component: AtomorrowView
+  },
+
+ 
+
+
 
 ]
 

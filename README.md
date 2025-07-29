@@ -33,3 +33,4 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 "# manato001" 
 "# manato001" 
 "# kadai1" 
+"# kadai1" 

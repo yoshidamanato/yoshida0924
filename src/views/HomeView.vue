@@ -1,47 +1,41 @@
 <template>
-  <v-container>
-    <ProductList />
-    <p>{{ time }}</p>
-    <p>{{ weather }}</p>
-    <p>{{ text }}</p>
-
-  </v-container>
+  <div>
+    <ProductList/>
+   
+    <v-text-field label="ID" v-model="idbox" type="number"  />
+    <v-btn @click="deleteTask">削除</v-btn>
+    
+  </div>
+  
 </template>
 
 <script>
-  import ProductList from '@/components/ProductList.vue' //ProductList.vueをインポート
+import ProductList from '@/components/ProductList.vue'
 
-  export default {
-    name: 'HomeView',
 
-    components: {
-      ProductList,
+export default {
+  name: 'HomeView',
+  components: { ProductList },
+  data(){
+    return{
+      idbox:'',
+    }
+
+  },
+  computed: {
+    tasks() {
+      return this.$store.getters['product/getTaskList'];
     },
-     computed:{
-        weather(){
+  },
+  mounted() {
+    this.$store.dispatch('product/selectTask');
+  },
+  methods: {
+  deleteTask() {
+    this.$store.dispatch('product/deleteTask', this.idbox);
+  }
+}
 
-          return this.$store.getters['product/todayWeather'];
-
-
-        },
-
-        text(){
-
-          return this.$store.getters['product/weatherText'];
-
-        },
-        time(){
-
-          return this.$store.getters['product/todayTime'];
-
-        }
-      },
-        mounted() {
-          this.$store.dispatch('product/weatherGet');
-          this.$store.dispatch('product/weatherGet');
-        }
-
-      }
-      
   
+};
 </script>

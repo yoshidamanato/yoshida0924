@@ -1,36 +1,33 @@
 <template>
-  <!-- 画面全体のレイアウトコンテナ -->
   <v-container>
-    
-    <!-- 中央揃え -->
-    <v-row justify="center">
-      
-      <!-- 幅を指定したカラム：モバイルで全幅、タブレットサイズ以上で幅6 -->
-      <v-col cols="12" md="6">
-        
-        <!-- タイトル表示 -->
-        <h2 class="text-h5 font-weight-bold text-center mb-4">
-          東京都天気予報
-        </h2>
+    <h1>ToDoリスト</h1>
 
-        
-        
-
-      
-
-    
-
-      </v-col>
-    </v-row>
+    <v-card
+      v-for="(task, index) in taskList"
+      :key="index"
+      class="pa-3 mb-3"
+      outlined
+    >
+      <h2>タスク: {{ task.task }}</h2>
+      <p>日付: {{ task.day }}</p>
+      <p>締切: {{ task.deadline }}</p>
+      <p>優先度: {{ task.priority }}</p>
+      <p>ID: {{ task.ID }}</p>
+    </v-card>
   </v-container>
 </template>
 
+
+
 <script>
-    export default {
-
-     
-
- 
-        
+export default {
+  computed: {
+    taskList() {
+      return this.$store.getters['product/getTaskList'];
     }
+  },
+  mounted() {
+    this.$store.dispatch('product/selectTask');
+  }
+};
 </script>

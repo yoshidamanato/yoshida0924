@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import tomorrowView from '../views/tomorrowView.vue'
-import AtomorrowView from '../views/AtomorrowView.vue'
+
 
 // 購入ページの読み込み
 
@@ -20,13 +20,6 @@ const routes = [
     component: tomorrowView
   },
   
-  // 購入ページのルートを追加
-  {
-    path: '/AtomorrowView',
-    name: 'AtomorrowView',
-    component: AtomorrowView
-  },
-
  
 
 

@@ -1,82 +1,38 @@
-import axios from 'axios'
-export default {
-  namespaced: true, // モジュール名でアクセスするための設定
-  state: {
+import axios from 'axios';
 
-    weather:[],
-    time:[],
-    selectedPref: "",
-    textTokyo:"",
-      
-    
+export default {
+  namespaced: true,
+  state: {
+    taskList: []
   },
   getters: {
-    
-    weatherInCart(state) {
-      return state.weather;
-      
-    },
-
-    todayWeather(state){
-      return state.weather[0];
-    },
-
-    tomorrowWeather(state){
-      return state.weather[1];
-    },
-
-    AtomorrowWeather(state){
-      return state.weather[2];
-    },
-
-     todayTime(state){
-      return state.time[0];
-    },
-
-    tomorrowTime(state){
-      return state.time[1];
-    },
-
-    AtomorrowTime(state){
-      return state.time[2];
-    },
-
-    weatherText(state){
-      return state.textTokyo;
+    getTaskList(state) {
+      return state.taskList;
     }
   },
   mutations: {
-    setWeather(state,weather) {
-      state.weather = weather
-    },
-    setText(state,text){
-      state.textTokyo = text;
-    },
-    setTime(state,time){
-      state.time = time;
-
+    setList(state, tasks) {
+      state.taskList = tasks;
     }
   },
   actions: {
-    async weatherGet({ commit } ){
-      const res =  await axios.get(`https://www.jma.go.jp/bosai/forecast/data/forecast/130000.json`);
-      const res1 = await axios.get(`https://www.jma.go.jp/bosai/forecast/data/overview_forecast/130000.json`);
-      
-      const weather = res.data[0].timeSeries[0].areas[0].weathers;
-
-      const time = res.data[0].timeSeries[0].timeDefines;
-
-      const text = res1.data.text;
-
-      console.log(weather);
-      console.log(time);
-      
-
-
-      commit('setWeather',weather);
-      commit('setText',text);
-      commit('setTime',time)
+    async selectTask({ commit }) {
+      const res = await axios.get(`https://m3h-yoshida-053.azurewebsites.net/api/SELECT`);
+      commit('setList', res.data.List);
     },
-    
+    async insertTask({ commit }, newTask) {
+      await axios.post(`https://m3h-yoshida-053.azurewebsites.net/api/INSERT`, newTask);
+      const res = await axios.get(`https://m3h-yoshida-053.azurewebsites.net/api/SELECT`);
+      commit('setList', res.data.List);
+    },
+
+    async deleteTask({ commit }, id) {
+     
+      await axios.post(`https://m3h-yoshida-053.azurewebsites.net/api/DELETE`, null, {
+        params: { id }
+      });
+      const res = await axios.get(`https://m3h-yoshida-053.azurewebsites.net/api/SELECT`);
+      commit('setList', res.data.List);
+    },
   }
 }

@@ -40,3 +40,4 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 "# manato0001" 
 "# manato0814" 
 "# 20252Q-yoshida-Front" 
+"# yoshida0924" 

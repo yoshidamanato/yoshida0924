@@ -1,37 +1,107 @@
 <template>
-  <v-container fluid class="pa-0">
+  <v-container fluid class="pa-0 background-container">
+
+    <h1 class="title-T">✈PLAN SEARCH</h1>
+
+    <h2 class="setumei">出発地、旅行を開始する出発時間と終了予定時間を入力してください。<br>
+      旅行中の希望条件（電車を使用してなど）を入力してください。<br>
+      訪れたいスポット名を入力すると最適な旅行ルートを提案します。</h2>
+    
     <!-- フォーム部分 -->
     <v-row justify="center" class="ma-0 pa-6">
-      <v-col cols="12" md="6">
+      <v-col cols="12" md="8">
         <v-card class="foam" outlined>
           <v-card-text>
-            <h2 class="mb-4">TRAVEL PLANNER ✈</h2>
+            
 
             <v-form>
-              <v-text-field label="出発地" v-model="id" type="text" dense outlined class="mb-3"/>
-              <v-text-field label="出発時間" v-model="day" type="time" dense outlined class="mb-3"/>
-              <v-text-field label="終了時間" v-model="deadline" type="time" dense outlined class="mb-3"/>
-              <v-text-field label="条件" v-model="task" type="text" dense outlined class="mb-3"/>
+              <v-text-field
+                label="出発地/Travel Plan"
+                v-model="id"
+                type="text"
+                dense
+                outlined
+                prepend-inner-icon="mdi-map-marker"
+                class="mb-3"
+              />
+              <v-text-field
+                label="出発時間/Departure time"
+                v-model="day"
+                type="time"
+                dense
+                outlined
+                prepend-inner-icon="mdi-clock-start"
+                class="mb-3"
+              />
+              <v-text-field
+                label="終了時間/End time"
+                v-model="deadline"
+                type="time"
+                dense
+                outlined
+                prepend-inner-icon="mdi-clock-end"
+                class="mb-3"
+              />
+              <v-text-field
+                label="条件/Conditions"
+                v-model="task"
+                type="text"
+                dense
+                outlined
+                prepend-inner-icon="mdi-clipboard-text"
+                class="mb-6"
+              />
 
-              <v-row v-for="(spot, index) in spotList" :key="index" class="mb-2">
+              <!-- スポット入力欄 -->
+              <v-row
+                v-for="(spot, index) in spotList"
+                :key="index"
+                class="mb-2"
+              >
                 <v-col>
-                  <v-text-field label="スポット名" v-model="spot.name" outlined dense />
+                  <v-text-field
+                    label="スポット名/Spot"
+                    v-model="spot.name"
+                    outlined
+                    dense
+                    prepend-inner-icon="mdi-map"
+                  />
                 </v-col>
                 <v-col class="d-flex align-center">
-                  <v-btn v-if="index > 0" color="grey" small icon @click="removeSpot(index)">
+                  <v-btn
+                    v-if="index > 0"
+                    color="error"
+                    small
+                    icon
+                    @click="removeSpot(index)"
+                  >
                     <v-icon>mdi-minus</v-icon>
                   </v-btn>
                 </v-col>
               </v-row>
 
               <v-row>
-                <v-btn color="#2a4073" small icon @click="addSpot">
+                <v-btn
+                  color="primary"
+                  small
+                  icon
+                  @click="addSpot"
+                  class="mb-4"
+                >
                   <v-icon>mdi-plus</v-icon>
                 </v-btn>
               </v-row>
 
-              <v-row class="mt-6">
-                <v-btn color="#2a4073" dark @click="insert">ルート検索をする</v-btn>
+              <v-row class="mt-6 justify-center">
+                <v-btn
+                  color="#2a4073"
+                  dark
+                  large
+                  elevation="3"
+                  @click="insert"
+                >
+                 Spotsearch route
+                </v-btn>
               </v-row>
             </v-form>
           </v-card-text>
@@ -39,11 +109,22 @@
       </v-col>
     </v-row>
 
+    <!-- 待機中オーバーレイ -->
+    <v-overlay :value="loading" opacity="0.7">
+      <v-progress-circular
+        indeterminate
+        size="64"
+        width="6"
+        color="primary"
+      />
+      <div class="mt-4 white--text">ルートを計算中です...</div>
+    </v-overlay>
+
     <!-- 旅プラン結果表示部分 -->
     <div v-if="parsedResult && parsedResult.spots && parsedResult.spots.length">
       <v-card class="pa-4 rounded-xl elevation-2 mb-6">
         <v-card-title class="text-h6 font-weight-bold">
-          ✈旅プラン
+          ✈ Travel Plan
         </v-card-title>
         <v-card-text class="text-body-1">
           <strong>出発地：</strong>{{ departure }}<br />
@@ -86,7 +167,7 @@
 
       <v-card class="pa-4 rounded-xl elevation-2 mt-6">
         <v-card-title class="text-h6 font-weight-bold">
-          結果
+          Result
         </v-card-title>
         <v-card-text class="text-body-1">
           <strong>総移動時間：</strong>{{ totalTravelTime }}<br />
@@ -109,7 +190,8 @@ export default {
       task: "",
       spotList: [{ name: "" }],
       result: "",
-      visibleDetails: {}
+      visibleDetails: {},
+      loading: false
     };
   },
   computed: {
@@ -156,6 +238,7 @@ export default {
       this.spotList.splice(index, 1);
     },
     async insert() {
+      this.loading = true;
       const Info = {
         id: this.id,
         day: this.day,
@@ -163,8 +246,14 @@ export default {
         task: this.task,
         spotList: this.spotList
       };
-      const response = await this.$store.dispatch("chat/sendMessage", Info);
-      this.result = response?.Content?.[0]?.Text;
+      try {
+        const response = await this.$store.dispatch("chat/sendMessage", Info);
+        this.result = response?.Content?.[0]?.Text;
+      } catch (e) {
+        console.error("API error:", e);
+      } finally {
+        this.loading = false;
+      }
     },
     toggleDetail(index) {
       this.$set(this.visibleDetails, index, !this.visibleDetails[index]);
@@ -174,38 +263,51 @@ export default {
 </script>
 
 <style scoped>
+.background-container {
+  position: relative;
+  background-image: url('@/assets/igu3.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  min-height: 100vh;
+  padding-bottom: 50px;
+  z-index: 0; 
+}
+
+
+.background-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); 
+  z-index: -1; 
+}
+
 .foam {
-  max-width: 1000px;
-  margin: auto;
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(255, 255, 255, 1);
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0,0,0,1);
+}
+
+.v-text-field input {
+  font-size: 10rem;
   color: white;
-  backdrop-filter: blur(5px);
-  padding: 20px;
-  border-radius: 12px;
 }
-.foam h2 {
-  color: #000000 !important;
+
+.setumei{
+  text-align: center;    
+  color: white;          
+  font-size: 1.5rem;  
 }
-.foam .v-label {
-  color: white !important;
-}
-.foam .v-input input {
-  color: black !important;
-  background-color: rgb(0, 0, 0) !important;
-  border-radius: 6px;
-  padding: 8px;
-}
-.foam .v-input input::placeholder {
-  color: #999 !important;
-  opacity: 1;
-}
-.foam .v-icon {
-  color: rgb(0, 0, 0) !important;
-}
-.detail-box {
-  background-color: #f5f5f5;
-  padding: 8px;
-  border-radius: 6px;
-  margin-top: 5px;
+
+.title-T{
+
+  text-align: center;    
+  color: white;          
+  font-size: 10rem;  
+
 }
 </style>

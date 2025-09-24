@@ -1,116 +1,77 @@
 <template>
   <v-container fluid class="pa-0 main-container">
- 
+
+    <!-- 言語切替プルダウン -->
+    <v-row justify="end" class="ma-2">
+      <v-col cols="auto">
+        <v-select
+          v-model="language"
+          :items="languages"
+          label="Language"
+          dense
+          outlined
+        ></v-select>
+      </v-col>
+    </v-row>
+
     <v-btn text to="/tomorrowView" tag="router-link" class="search">Search</v-btn>
-    
+
+
     <v-row justify="center" class="ma-0 pa-0">
       <v-col cols="12" class="text-center mb-2">
         <h2 class="section-title">OUR SERVICES INCLUDE</h2>
       </v-col>
     </v-row>
 
-
+  
     <v-row justify="center" class="ma-0 pa-0">
       <v-col cols="12">
         <div class="explain-section">
-
-        
-          <div class="explain-row">
+          <div 
+            class="explain-row"
+            v-for="(item, index) in currentTexts" 
+            :key="index"
+            :class="{ reverse: index % 2 === 1 }"
+          >
             <div class="explain-image">
-              <img src="@/assets/setumei1.jpg" alt="説明1" />
+              <img :src="item.img" :alt="'説明' + (index+1)" />
             </div>
             <div class="explain-text">
-              
-              <h3>最適な旅行ルートを自動で提案</h3>
-              <p>出発地や目的地、訪れたいスポットを入力すると、システムが自動で最適な旅行ルートを作成します。
-移動時間を短縮しながら、効率よく観光地を巡れるように設計されているので、時間を無駄にせず充実した旅を楽しめます。
-初めて訪れる場所でも安心して旅行を計画できます。</p>
-   
+              <h3>{{ item.title }}</h3>
+              <p>{{ item.description }}</p>
             </div>
           </div>
-
-          
-          <div class="explain-row reverse">
-            <div class="explain-image">
-              <img src="@/assets/setumei2.jpg" alt="説明2" />
-            </div>
-            <div class="explain-text">
-              <h3>現在地をマップに表示</h3>
-              <p>GPS機能を利用して、あなたの現在地を地図上にリアルタイムで表示します。
-周辺スポットやルートも同時に確認できるので、初めて訪れる場所でも迷わず移動できます。
-目的地までの道順もわかりやすく表示され、安心して観光を楽しめます。</p>
-
-            </div>
-          </div>
-
-          <div class="explain-row">
-            <div class="explain-image">
-              <img src="@/assets/setumei3.jpg" alt="説明3" />
-            </div>
-            <div class="explain-text">
-              <h3>観光地の口コミ共有</h3>
-              <p>他の旅行者が投稿した口コミや評価を閲覧できます。
-自分の体験やおすすめ情報も投稿できるので、旅行計画に役立てられます。
-リアルな体験談を参考にすることで、より満足度の高い観光プランを立てられます。</p>
-
-            </div>
-          </div>
-
         </div>
       </v-col>
     </v-row>
 
-  
     <img src="@/assets/na.jpg" class="bana" />
 
+    <!-- Top Travel Plans -->
     <v-row justify="center" class="ma-0 pa-0">
       <v-col cols="12" class="text-center mb-2">
         <h2 class="text-R">Top Travel Plans</h2>
       </v-col>
     </v-row>
 
- 
-   <v-row justify="center" class="spot-R" style="max-width: 1200px; margin: 0 auto;">
-  
-  <v-col cols="12" md="3">
-    <v-card outlined to="/routes/tokyo" tag="router-link">
-      <v-img src="@/assets/spot1.jpg" height="200px" cover />
-      <v-card-title>東京ルート</v-card-title>
-      <v-card-text>
-        最新の都市文化と伝統が融合した大都市。ショッピング・グルメが充実。
-      </v-card-text>
-    </v-card>
-  </v-col>
+    <v-row justify="center" class="spot-R" style="max-width: 1200px; margin: 0 auto;">
+      <v-col cols="12" md="3" v-for="(card, index) in currentCards" :key="index">
+  <v-card outlined :to="card.link" tag="router-link">
+    <v-img :src="card.img" height="200px" cover />
+    <v-card-title>{{ card.title }}</v-card-title>
+    <v-card-text>{{ card.text }}</v-card-text>
+  </v-card>
+</v-col>
 
-  <v-col cols="12" md="3">
-    <v-card outlined to="/routes/kyoto" tag="router-link">
-      <v-img src="@/assets/spot2.jpg" height="200px" cover />
-      <v-card-title>京都ルート</v-card-title>
-      <v-card-text>
-        古都ならではの寺社仏閣や伝統文化を体験できる。桜や紅葉の名所も多数。
-      </v-card-text>
-    </v-card>
-  </v-col>
+    </v-row>
 
-  
-  <v-col cols="12" md="3">
-    <v-card outlined to="/routes/hokkaido" tag="router-link">
-      <v-img src="@/assets/spot3.jpg" height="200px" cover />
-      <v-card-title>北海道ルート</v-card-title>
-      <v-card-text>
-        広大な自然と四季折々の風景、美味しい海産物や温泉を楽しめる。
-      </v-card-text>
-    </v-card>
-  </v-col>
-</v-row>
-
+    <!-- Discount Coupon -->
     <v-row justify="center" class="ma-0 pa-0">
       <v-col cols="12" class="text-center mb-2">
         <h2 class="koukoku-t">Discount Coupon</h2>
       </v-col>
     </v-row>
 
-   
     <v-row justify="center" class="koukoku">
       <v-col cols="12" md="10">
         <div class="carousel-wrapper">
@@ -122,7 +83,6 @@
         </div>
       </v-col>
     </v-row>
-
 
     <v-row justify="center" class="ma-0 pa-0">
       <v-col cols="12" class="text-center mb-5">
@@ -138,14 +98,54 @@ export default {
   name: "MainPage",
   data() {
     return {
+      language: "ja",
+      languages: [
+        { text: "日本語", value: "ja" },
+        { text: "English", value: "en" }
+      ],
       current: 0,
       koukokuImages: [
         require("@/assets/koukoku1.png"),
         require("@/assets/koukoku2.png"),
         require("@/assets/koukoku3.png"),
         require("@/assets/koukoku4.png")
-      ]
+      ],
+      texts: {
+        ja: [
+          { img: require("@/assets/setumei1.jpg"), title: "最適な旅行ルートを自動で提案", description: "出発地や目的地、訪れたいスポットを入力すると、システムが自動で最適な旅行ルートを作成します。移動時間を短縮しながら、効率よく観光地を巡れるように設計されているので、時間を無駄にせず充実した旅を楽しめます。初めて訪れる場所でも安心して旅行を計画できます。" },
+          { img: require("@/assets/setumei2.jpg"), title: "現在地をマップに表示", description: "GPS機能を利用して、あなたの現在地を地図上にリアルタイムで表示します。周辺スポットやルートも同時に確認できるので、初めて訪れる場所でも迷わず移動できます。目的地までの道順もわかりやすく表示され、安心して観光を楽しめます。" },
+          { img: require("@/assets/setumei3.jpg"), title: "観光地の口コミ共有", description: "他の旅行者が投稿した口コミや評価を閲覧できます。自分の体験やおすすめ情報も投稿できるので、旅行計画に役立てられます。リアルな体験談を参考にすることで、より満足度の高い観光プランを立てられます。" }
+        ],
+        en: [
+          { img: require("@/assets/setumei1.jpg"), title: "Automatic Travel Route Suggestion", description: "Enter departure, destination, and spots you want to visit, and the system automatically creates the optimal travel route. It is designed to shorten travel time while efficiently visiting attractions, so you can enjoy a fulfilling trip without wasting time. You can plan your trip even if it's your first time visiting the area." },
+          { img: require("@/assets/setumei2.jpg"), title: "Display Current Location on Map", description: "Using GPS, your current location is displayed in real time on the map. Nearby spots and routes can also be checked simultaneously, so you can move without getting lost even if it is your first visit. Directions to your destination are clearly displayed, ensuring a safe and enjoyable sightseeing experience." },
+          { img: require("@/assets/setumei3.jpg"), title: "Share Travel Reviews", description: "You can view reviews and ratings posted by other travelers. You can also post your own experiences and recommendations, which helps with planning your trip. Referring to real experiences allows you to create a more satisfying travel plan." }
+        ]
+      },
+      cards: {
+  ja: [
+    { img: require('@/assets/spot1.jpg'), title: '東京ルート', text: '最新の都市文化と伝統が融合した大都市。ショッピング・グルメが充実。', link: '/routes/tokyo' },
+    { img: require('@/assets/spot2.jpg'), title: '京都ルート', text: '古都ならではの寺社仏閣や伝統文化を体験できる。桜や紅葉の名所も多数。', link: '/routes/kyoto' },
+    { img: require('@/assets/spot3.jpg'), title: '北海道ルート', text: '広大な自然と四季折々の風景、美味しい海産物や温泉を楽しめる。', link: '/routes/hokkaido' }
+  ],
+  en: [
+    { img: require('@/assets/spot1.jpg'), title: 'Tokyo Route', text: 'A large city where modern culture and tradition coexist. Shopping and gourmet spots are plentiful.', link: '/routes/tokyo' },
+    { img: require('@/assets/spot2.jpg'), title: 'Kyoto Route', text: 'Experience temples, shrines, and traditional culture unique to the ancient capital. Many famous cherry blossom and autumn leaves spots.', link: '/routes/kyoto' },
+    { img: require('@/assets/spot3.jpg'), title: 'Hokkaido Route', text: 'Enjoy vast nature, seasonal landscapes, delicious seafood, and hot springs.', link: '/routes/hokkaido' }
+  ]
+}
+
     };
+  },
+  computed: {
+    currentTexts() {
+      return this.texts[this.language];
+      
+    },
+    currentCards() {
+    return this.cards[this.language];
+  }
+    
   },
   mounted() {
     setInterval(() => {
@@ -262,5 +262,4 @@ export default {
   width: 1000px;       
   height: 100px;        
 }
-
 </style>
